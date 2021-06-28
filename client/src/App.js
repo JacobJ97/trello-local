@@ -29,7 +29,8 @@ const App = () => {
       setTasks(taskData)
     }
 
-    getSections().then(getTasks());
+    getSections();
+    getTasks();
   }, []);
 
   const fetchSections = async () => {
@@ -69,6 +70,16 @@ const App = () => {
     setTasks([...tasks, data]);
   }
 
+  const deleteSection = async (id) => {
+    await fetch(`/api/section/${id}`, { method: 'DELETE' });
+    setSections(sections.filter((section) => section.section_id !== id ));
+  }
+
+  const deleteTask = async (id) => {
+    await fetch(`/api/task/${id}`, { method: 'DELETE' });
+    setTasks(tasks.filter(task => task.task_id !== id));
+  }
+
   /*const changeSettings = () => {
 
   }*/
@@ -91,7 +102,7 @@ const App = () => {
     <div className="App">
       <TopBar onAddModal={addSectionModal} onSettingsModal={getSettingsModal} modalActive={modalState} />
       {modalState && (<Modal sectionModal={modalStateSection} settingsModal={modalStateSettings} tasksModal={modalStateTasks} modalVisible={closeAll} title={modalTitle} onAddSection={addSection} onAddTask={addTask} sectionIDForTask={sectionID} />)}
-      <Board sections={sections} tasks={tasks} onAddModal={addTaskModal} modalActive={modalState} />
+      <Board sections={sections} tasks={tasks} onAddModal={addTaskModal} modalActive={modalState} deleteSection={deleteSection} deleteTask={deleteTask} />
     </div>
   );
 }

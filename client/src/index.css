@@ -48,6 +48,11 @@ button:disabled {
   float: left;
   margin-right: 20px;
   margin-left: 20px;
+}
+
+.btn-times {
+  margin-right: 20px;
+  margin-left: 20px;
 } 
 
 .btn-cog {
@@ -85,7 +90,7 @@ button:disabled {
   border: 2px solid green;
 }
 
-.section-heading {
+.section-heading, .task-heading {
   display: inline-flex;
   width: 100%;
 }
@@ -94,7 +99,11 @@ button:disabled {
   width: 100%
 }
 
-.section-heading .btn-plus {
+.task-heading h2 {
+  width: 100%;
+}
+
+.section-heading .btn, .task-heading .btn-times {
   align-self: center;
 }
 
