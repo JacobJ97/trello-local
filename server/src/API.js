@@ -2,6 +2,7 @@ const sequelize = require('./DB.js');
 const express = require("express");
 const Task = require('./models/TaskModel')(sequelize.db, sequelize.dt);
 const Section  = require('./models/SectionModel')(sequelize.db, sequelize.dt);
+require('./models/ModelAssociation')(Section, Task);
 
 const mainAPI = async (app) => {
     await sequelize.db.sync();
@@ -43,7 +44,7 @@ const mainAPI = async (app) => {
 
     app.post("/api/task", async (req, res) => {
         const { title, description, labels, sectionIDForTask } = req.body;
-        await Task.create({ task_name: title, task_description: description, task_labels: labels, section_id: sectionIDForTask })
+        await Task.create({ task_name: title, task_description: description, task_labels: labels, SectionSectionId: sectionIDForTask })
         .then((task) => res.send(task))
         .catch((err) => {
             console.error(JSON.stringify(err));
@@ -51,20 +52,32 @@ const mainAPI = async (app) => {
         });
     });
 
-    app.put("/api/section/:id", (req, res) => {
-
+    app.put("/api/section/:id", async (req, res) => {
+        
     });
 
     app.put("/api/task/:id", (req, res) => {
 
     });
 
-    app.delete("/api/section/:id", (req, res) => {
-
+    app.delete("/api/section/:id", async (req, res) => {
+        const { id } = req.params;
+        await Section.destroy({ where: { section_id: id } })
+        .then(section => section == 1 && res.status(200).send())
+        .catch((err) => {
+            console.error(JSON.stringify(err));
+            return res.status(400).send(err);
+        })
     });
 
-    app.delete("/api/task/:id", (req, res) => {
-
+    app.delete("/api/task/:id", async (req, res) => {
+        const { id } = req.params;
+        await Task.destroy({ where: { task_id: id } })
+        .then(task => task == 1 && res.status(200).send())
+        .catch((err) => {
+            console.error(JSON.stringify(err));
+            return res.status(400).send(err);
+        })
     });
 }
 

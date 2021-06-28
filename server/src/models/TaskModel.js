@@ -15,13 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         task_labels: {
             type: DataTypes.STRING,
-        },
-        section_id: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Sections',
-                key: 'section_id'
-            }
         }
     });
 }
