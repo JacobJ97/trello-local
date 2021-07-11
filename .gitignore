@@ -9,7 +9,7 @@
 .pnp.js
 
 # testing
-/coverage
+/client/coverage
 
 # production
 /build
