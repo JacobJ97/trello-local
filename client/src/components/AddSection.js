@@ -1,3 +1,4 @@
+import ButtonModal from './ButtonModal'
 import { useState } from 'react'
 
 const AddSection = ({modalVisible, onAddSection}) => {
@@ -22,6 +23,7 @@ const AddSection = ({modalVisible, onAddSection}) => {
             <div className="form-control">
                 <input type="text" value={section} placeholder="Section Name" onChange={(e) => setSection(e.target.value)} />
             </div>
+            <ButtonModal form="add-section-form" type="submit" className="btn btn-block" />
         </form>
     )
 }

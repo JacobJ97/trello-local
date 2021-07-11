@@ -1,3 +1,4 @@
+import ButtonModal from './ButtonModal';
 import { useState } from 'react'
 
 const AddTaskSection = ({modalVisible, onAddTask, sectionIDForTask}) => {
@@ -35,6 +36,7 @@ const AddTaskSection = ({modalVisible, onAddTask, sectionIDForTask}) => {
                 <div className="form-control">
                     <input type="text" value={labels} placeholder="Labels" onChange={(e) => setLabels(e.target.value)} />
                 </div>
+                <ButtonModal form="add-task-form" type="submit" className="btn btn-block" />
             </form>
         </div>
         </div>

@@ -3,7 +3,7 @@ import React from 'react'
 
 const Button = ({iconText, classText, onClick, disabled}) => {
     return (
-        <button className={classText} onClick={onClick} disabled={disabled}><FontAwesomeIcon icon={iconText}/></button>
+        <button className={"btn-main " + classText} onClick={onClick} disabled={disabled}><FontAwesomeIcon icon={iconText}/></button>
     )
 }
 

@@ -3,7 +3,6 @@ import Board from './components/Board.js';
 //import Footer from './components/Footer.js';
 import Modal from './components/Modal.js';
 import { useState, useEffect } from 'react';
-import './App.css';
 
 const App = () => {
   
