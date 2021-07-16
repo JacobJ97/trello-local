@@ -79,6 +79,22 @@ const App = () => {
     setTasks(tasks.filter(task => task.task_id !== id));
   }
 
+  const editSectionSubmit = async (id, sectionName) => {
+    const res = await fetch(`/api/section/${id}`);
+    const section = await res.json();
+    const updTitle = {...section, section_name: sectionName};
+    await fetch(`/api/section/${id}`, {method: 'PUT', headers: { 'Content-type': 'application/hal+json' }, body: JSON.stringify(updTitle)});
+    setSections(sections.map((section) => section.section_id === id ? {...section, section_name: sectionName} : section));
+  }
+
+  const editTask = async (id, argument, taskField) => {
+    const res = await fetch(`/api/task/${id}`);
+    const task = await res.json();
+    const updTitle = {...task, [argument]: taskField}
+    await fetch(`api/task/${id}`, {method: 'PUT', headers: { 'Content-type': 'application/hal+json' }, body: JSON.stringify(updTitle)});
+    setTasks(tasks.map((task) => task.task_id === id ? {...task, [argument]: taskField} : task ));
+  }
+ 
   /*const changeSettings = () => {
 
   }*/
@@ -101,7 +117,7 @@ const App = () => {
     <div className="App">
       <TopBar onAddModal={addSectionModal} onSettingsModal={getSettingsModal} modalActive={modalState} />
       {modalState && (<Modal sectionModal={modalStateSection} settingsModal={modalStateSettings} tasksModal={modalStateTasks} modalVisible={closeAll} title={modalTitle} onAddSection={addSection} onAddTask={addTask} sectionIDForTask={sectionID} />)}
-      <Board sections={sections} tasks={tasks} onAddModal={addTaskModal} modalActive={modalState} deleteSection={deleteSection} deleteTask={deleteTask} />
+      <Board sections={sections} tasks={tasks} onAddModal={addTaskModal} modalActive={modalState} deleteSection={deleteSection} deleteTask={deleteTask} editSection={editSectionSubmit} editTask={editTask} />
     </div>
   );
 }
