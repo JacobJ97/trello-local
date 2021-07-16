@@ -1,6 +1,7 @@
 import App from '../../App';
 import { render, fireEvent, waitFor, findByText } from '@testing-library/react'; 
 import '@testing-library/jest-dom';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 const sections = [{
     section_id: 1,
@@ -11,7 +12,7 @@ const tasks = [{
     task_id: 1,
     task_name: 'task',
     task_description: 'this is the description',
-    task_label: 'label',
+    task_labels: 'label',
     SectionSectionId: 1
 }]
 
@@ -152,4 +153,76 @@ describe('mocking fetch DELETE requests', () => {
         let task = await findByText('task');
         waitFor(() => expect(task).toBeNull())
     });
-})
+});
+
+describe('mocking fetch PUT requests', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    test('Edit title for section item', async () => {
+        const sections = [{
+            section_id: 1,
+            section_name: 'section'
+        }, {
+            section_id: 2,
+            section_name: 'sect2'
+        }];
+
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+            json: jest.fn().mockResolvedValueOnce(sections).mockResolvedValueOnce(tasks).mockResolvedValueOnce("SUCCESSFUL")
+        });
+
+        const { findAllByRole, findByRole } = render(<App />);
+        const title = await findAllByRole('heading');
+        fireEvent.dblClick(title[0]);
+        const text = await findByRole('textbox')
+        fireEvent.change(text, {
+            target: {
+                value: 'Test'
+            }
+        });
+        fireEvent.blur(text);
+        const titleUpdated = await findAllByRole('heading');
+        waitFor(() => expect(titleUpdated[0].innerHTML).toContain('Test'))
+    });
+    test('Edit values for task item', async () => {
+        const tasks = [{
+            task_id: 1,
+            task_name: 'task',
+            task_description: 'this is the description',
+            task_labels: 'label',
+            SectionSectionId: 1
+        }, {
+            task_id: 2,
+            task_name: 'tas2',
+            task_description: 'this the desc2',
+            task_labels: 'lab2',
+            SectionSectionId: 1
+        }];
+
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+            json: jest.fn().mockResolvedValueOnce(sections).mockResolvedValueOnce(tasks).mockResolvedValueOnce("SUCCESSFUL")
+        });
+
+        const { findByText, findAllByRole} = render(<App />);
+        const title = await findByText('task');
+        const desc = await findByText('this is the description');
+        const label = await findByText('label');
+        fireEvent.dblClick(title);
+        fireEvent.dblClick(desc);
+        fireEvent.dblClick(label);
+        const textboxes = await findAllByRole('textbox');
+        for (let i = 0; i < textboxes.length; i++) {
+            let textbox = textboxes[i];
+            fireEvent.change(textbox, {
+                target: {
+                    value: 'TestUpdate'
+                }
+            });
+            fireEvent.blur(textbox);
+            const textboxUpdate = await findByText('TestUpdate');
+            expect(textboxUpdate.innerHTML).toContain('TestUpdate');
+        }
+    });
+});
