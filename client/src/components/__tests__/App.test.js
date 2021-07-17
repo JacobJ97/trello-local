@@ -1,7 +1,6 @@
 import App from '../../App';
 import { render, fireEvent, waitFor, findByText } from '@testing-library/react'; 
 import '@testing-library/jest-dom';
-import { text } from '@fortawesome/fontawesome-svg-core';
 
 const sections = [{
     section_id: 1,
@@ -205,7 +204,7 @@ describe('mocking fetch PUT requests', () => {
             json: jest.fn().mockResolvedValueOnce(sections).mockResolvedValueOnce(tasks).mockResolvedValueOnce("SUCCESSFUL")
         });
 
-        const { findByText, findAllByRole} = render(<App />);
+        const { findByText, findAllByRole, findAllByText} = render(<App />);
         const title = await findByText('task');
         const desc = await findByText('this is the description');
         const label = await findByText('label');
@@ -221,8 +220,10 @@ describe('mocking fetch PUT requests', () => {
                 }
             });
             fireEvent.blur(textbox);
-            const textboxUpdate = await findByText('TestUpdate');
-            expect(textboxUpdate.innerHTML).toContain('TestUpdate');
+            const textboxUpdateAll = await findAllByText('TestUpdate');
+            textboxUpdateAll.forEach((textboxUpdate) => {
+                expect(textboxUpdate.innerHTML).toContain('TestUpdate');
+            })
         }
     });
 });

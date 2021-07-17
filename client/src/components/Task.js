@@ -22,7 +22,7 @@ const Task = ({task, section, deleteTask, modalActive, editTask}) => {
             return;
         }
 
-        editTask(task.task_id, "task_name", editTaskTitle)
+        editTask(task.task_id, "task_name", "title", editTaskTitle)
         setTaskToggleTitle(false);
         setEditTaskTitle('');
     }
@@ -35,7 +35,7 @@ const Task = ({task, section, deleteTask, modalActive, editTask}) => {
             return;
         }
 
-        editTask(task.task_id, "task_description", editTaskDescription)
+        editTask(task.task_id, "task_description", "description", editTaskDescription)
         setTaskToggleDescription(false);
         setEditTaskDescription('');
     }
@@ -48,7 +48,7 @@ const Task = ({task, section, deleteTask, modalActive, editTask}) => {
             return;
         }
 
-        editTask(task.task_id, "task_labels", editTaskLabels)
+        editTask(task.task_id, "task_labels", "labels", editTaskLabels)
         setTaskToggleLabels(false);
         setEditTaskLabels('');
     }
