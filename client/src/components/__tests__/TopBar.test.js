@@ -3,6 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskSection from "../TaskSection";
 import Modal from "../Modal";
+import { DragDropContext } from 'react-beautiful-dnd';
 
 describe('the top section of the app', () => {
     test('Checking action for adding a new section to the kanban board', () => {
@@ -11,9 +12,25 @@ describe('the top section of the app', () => {
             section_id: 1
         };
 
+        jest.mock('react-beautiful-dnd', () => ({
+            Droppable: ({ children }) => children({
+              draggableProps: {
+                style: {},
+              },
+              innerRef: jest.fn(),
+            }, {}),
+            Draggable: ({ children }) => children({
+              draggableProps: {
+                style: {},
+              },
+              innerRef: jest.fn(),
+            }, {}),
+            DragDropContext: ({ children }) => children,
+        }));
+
         const taskData = [];
 
-        const addModal = jest.fn(x => render(<TaskSection section={sectionData} tasks={taskData} />));
+        const addModal = jest.fn(x => render(<DragDropContext><TaskSection section={sectionData} tasks={taskData} /></DragDropContext>));
         const {container} = render(<TopBar onAddModal={addModal} />);
         let button = container.querySelector('.btn-plus');
         button.click();
