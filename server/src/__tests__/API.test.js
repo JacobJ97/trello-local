@@ -15,7 +15,7 @@ describe('regular POST request testing', () => {
         expect(resp.body.errors[0].message).toBe('Section.section_name cannot be null')
     });
     test('POST request for task (/api/task)', async () => {
-        const resp = await request.post('/api/task').type('form').send({title: 'Waking Up', description: 'Getting out of bed slowly', labels: 'days', sectionIDForTask: 1}).set('Accept', 'application/json');
+        const resp = await request.post('/api/task').type('form').send({title: 'Waking Up', description: 'Getting out of bed slowly', labels: 'days', orderID: 1, sectionIDForTask: 1}).set('Accept', 'application/json');
         expect(resp.statusCode).toBe(200);
         expect(resp.body.task_name).toBe('Waking Up')
     });
@@ -74,6 +74,30 @@ describe('regular PUT request testing', () => {
         const task = resp2.body[0];
         expect(task.task_name).toBe('Breakfast');
     });
+    test('Valid PUT request for changing order of task up (/api/task/1)', async () => {
+        const resp = await request.put('/api/task/1').type('form').send({startingIndex: 2, orderID: 1, sectionIDForTask: 1}).set('Accept', 'application/json');
+        expect(resp.statusCode).toBe(204);
+        const resp2 = await request.get('/api/task');
+        const task = resp2.body[0];
+        expect(task.task_order).toBe(1);
+    });
+    test('Valid PUT request for changing order of task down (/api/task/1)', async () => {
+        const resp = await request.put('/api/task/1').type('form').send({startingIndex: 1, orderID: 2, sectionIDForTask: 1}).set('Accept', 'application/json');
+        expect(resp.statusCode).toBe(204);
+        const resp2 = await request.get('/api/task');
+        const task = resp2.body[0];
+        expect(task.task_order).toBe(2);
+    });
+    test('Valid PUT request for changing task from one section to another (/api/task/1)', async () => {
+        const resp2 = await request.post('/api/section').type('form').send({section: 'Morning'}).set('Accept', 'application/json');
+        const resp = await request.put('/api/task/1').type('form').send({orderID: 1, sectionIDForTask: 1, destinationSectionID: 2}).set('Accept', 'application/json');
+        expect(resp2.statusCode).toBe(200);
+        expect(resp.statusCode).toBe(204);
+        const resp3 = await request.get('/api/task');
+        const task = resp3.body[0];
+        expect(task.task_order).toBe(1);
+        expect(task.SectionSectionId).toBe(2);
+    });
     test('Invalid PUT request for task (/api/task/1)', async () => {
         const resp = await request.put('/api/task/1').type('form').send({ddddd: 'malformed info'}).set('Accept', 'application/json');
         expect(resp.statusCode).toBe(400);
@@ -98,19 +122,20 @@ describe('regular DELETE request testing', () => {
     let request = supertest(app);
 
     test('Valid DELETE request for task (/api/task/1)', async () => {
-        const resp = await request.delete('/api/task/1')
+        const resp = await request.delete('/api/task/1').type('form').send({orderID: 1, sectionIDForTask: 1})
         expect(resp.statusCode).toBe(200);
     });
     test('Invalid DELETE request for task (does not exist) (/api/task/2)', async () => {
-        const resp = await request.delete('/api/task/2')
+        const resp = await request.delete('/api/task/2').type('form').send({orderID: 1, sectionIDForTask: 1})
         expect(resp.statusCode).toBe(404);
     });
     test('DELETE request for section (/api/section/1)', async () => {
-        const resp = await request.delete('/api/section/1')
+        const resp = await request.delete('/api/section/1').type('form').send({orderID: 1, sectionIDForTask: 1})
         expect(resp.statusCode).toBe(200);
+        await request.delete('/api/section/2').type('form').send({orderID: 1, sectionIDForTask: 1})
     });
-    test('Invalid DELETE request for section (does not exist) (/api/section/2)', async () => {
-        const resp = await request.delete('/api/section/2')
+    test('Invalid DELETE request for section (does not exist) (/api/section/3)', async () => {
+        const resp = await request.delete('/api/section/3').type('form').send({orderID: 1, sectionIDForTask: 1})
         expect(resp.statusCode).toBe(404);
     });
 })
