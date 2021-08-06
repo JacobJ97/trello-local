@@ -1,7 +1,7 @@
 import ButtonModal from './ButtonModal';
 import { useState } from 'react'
 
-const AddTaskSection = ({modalVisible, onAddTask, sectionIDForTask}) => {
+const AddTaskSection = ({modalVisible, onAddTask, sectionIDForTask, orderID}) => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -15,7 +15,7 @@ const AddTaskSection = ({modalVisible, onAddTask, sectionIDForTask}) => {
             return;
         }
 
-        onAddTask({ title, description, labels, sectionIDForTask });
+        onAddTask({ title, description, labels, sectionIDForTask, orderID}, sectionIDForTask);
 
         setTitle('');
         setDescription('');
