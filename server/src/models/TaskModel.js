@@ -16,6 +16,10 @@ const Task = sequelize.define('Task', {
     },
     task_labels: {
         type: DataTypes.STRING,
+    },
+    task_order: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 });
 
