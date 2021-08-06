@@ -5,7 +5,7 @@ import AddSection from './AddSection'
 import AddTaskSection from './AddTaskSection'
 import Settings from './Settings'
 
-const Modal = ({sectionModal, settingsModal, tasksModal, modalVisible, title, onAddSection, onAddTask, sectionIDForTask}) => {
+const Modal = ({sectionModal, settingsModal, tasksModal, modalVisible, title, onAddSection, onAddTask, sectionIDForTask, orderID}) => {
     return (
         <div className="modal">
             <div className="modal-content">
@@ -16,7 +16,7 @@ const Modal = ({sectionModal, settingsModal, tasksModal, modalVisible, title, on
                 <div className="modal-body">
                     {sectionModal && (<AddSection modalVisible={modalVisible} onAddSection={onAddSection} />)}
                     {settingsModal && (<Settings modalVisible={modalVisible} />)}
-                    {tasksModal && (<AddTaskSection modalVisible={modalVisible} onAddTask={onAddTask} sectionIDForTask={sectionIDForTask}/>)}
+                    {tasksModal && (<AddTaskSection modalVisible={modalVisible} onAddTask={onAddTask} sectionIDForTask={sectionIDForTask} orderID={orderID}/>)}
                 </div>
             </div>    
         </div>
